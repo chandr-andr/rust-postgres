@@ -44,10 +44,21 @@ pub enum TargetSessionAttrs {
 pub enum SslMode {
     /// Do not use TLS.
     Disable,
+    /// Pay the overhead of encryption if the server insists on it.
+    Allow,
     /// Attempt to connect with TLS but allow sessions without.
     Prefer,
     /// Require the use of TLS.
     Require,
+    /// I want my data encrypted,
+    /// and I accept the overhead.
+    /// I want to be sure that I connect to a server that I trust.
+    VerifyCa,
+    /// I want my data encrypted,
+    /// and I accept the overhead.
+    /// I want to be sure that I connect to a server I trust,
+    /// and that it's the one I specify.
+    VerifyFull,
 }
 
 /// Channel binding configuration.
@@ -542,8 +553,11 @@ impl Config {
             "sslmode" => {
                 let mode = match value {
                     "disable" => SslMode::Disable,
+                    "allow" => SslMode::Allow,
                     "prefer" => SslMode::Prefer,
                     "require" => SslMode::Require,
+                    "verify-ca" => SslMode::VerifyCa,
+                    "verify-full" => SslMode::VerifyFull,
                     _ => return Err(Error::config_parse(Box::new(InvalidValue("sslmode")))),
                 };
                 self.ssl_mode(mode);

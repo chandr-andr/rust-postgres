@@ -19,10 +19,17 @@ where
 {
     match mode {
         SslMode::Disable => return Ok(MaybeTlsStream::Raw(stream)),
+        SslMode::Allow if !tls.can_connect(ForcePrivateApi) => {
+            return Ok(MaybeTlsStream::Raw(stream))
+        }
         SslMode::Prefer if !tls.can_connect(ForcePrivateApi) => {
             return Ok(MaybeTlsStream::Raw(stream))
         }
-        SslMode::Prefer | SslMode::Require => {}
+        SslMode::Allow
+        | SslMode::Prefer
+        | SslMode::Require
+        | SslMode::VerifyCa
+        | SslMode::VerifyFull => {}
     }
 
     let mut buf = BytesMut::new();
