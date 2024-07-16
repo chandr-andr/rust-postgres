@@ -99,6 +99,23 @@ impl BinaryCopyInWriter {
         Ok(())
     }
 
+    /// Test
+    pub async fn write_raw_bytes<P>(
+        self: Pin<&mut Self>,
+        values: &mut BytesMut,
+    ) -> Result<(), Error>
+    where
+        P: BorrowToSql,
+    {
+        let mut this = self.project();
+
+        if this.buf.len() > 4096 {
+            this.sink.send(values.split().freeze()).await?;
+        }
+
+        Ok(())
+    }
+
     /// Completes the copy, returning the number of rows added.
     ///
     /// This method *must* be used to complete the copy process. If it is not, the copy will be aborted.
