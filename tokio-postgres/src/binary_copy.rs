@@ -132,6 +132,17 @@ impl BinaryCopyInWriter {
         this.sink.send(this.buf.split().freeze()).await?;
         this.sink.finish().await
     }
+
+    /// Completes the copy, returning the number of rows added.
+    ///
+    /// This method *must* be used to complete the copy process. If it is not, the copy will be aborted.
+    pub async fn finish_empty(self: Pin<&mut Self>) -> Result<u64, Error> {
+        let mut this = self.project();
+
+        // this.buf.put_i16(-1);
+        // this.sink.send(this.buf.split().freeze()).await?;
+        this.sink.finish().await
+    }
 }
 
 struct Header {
