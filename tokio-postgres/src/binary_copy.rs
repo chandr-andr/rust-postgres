@@ -103,9 +103,7 @@ impl BinaryCopyInWriter {
     pub async fn write_raw_bytes(self: Pin<&mut Self>, values: &mut BytesMut) -> Result<(), Error> {
         let mut this = self.project();
 
-        if values.len() > 4096 {
-            this.sink.send(values.split().freeze()).await?;
-        }
+        this.sink.send(values.split().freeze()).await?;
 
         Ok(())
     }
