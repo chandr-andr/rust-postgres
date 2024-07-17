@@ -103,10 +103,7 @@ impl BinaryCopyInWriter {
     pub async fn write_raw_bytes<P>(
         self: Pin<&mut Self>,
         values: &mut BytesMut,
-    ) -> Result<(), Error>
-    where
-        P: BorrowToSql,
-    {
+    ) -> Result<(), Error> {
         let mut this = self.project();
 
         if this.buf.len() > 4096 {
