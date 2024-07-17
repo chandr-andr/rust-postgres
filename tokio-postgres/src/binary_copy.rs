@@ -100,7 +100,7 @@ impl BinaryCopyInWriter {
     }
 
     /// Test
-    pub async fn write_raw_bytes(self: Pin<&mut Self>, values: &mut BytesMut) -> Result<(), Error> {
+    pub async fn write_raw_no(self: Pin<&mut Self>, values: &mut BytesMut) -> Result<(), Error> {
         let mut this = self.project();
 
         this.sink.send(values.split().freeze()).await?;
