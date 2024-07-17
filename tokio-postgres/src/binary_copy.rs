@@ -45,6 +45,20 @@ impl BinaryCopyInWriter {
         }
     }
 
+    /// Creates a new writer which will write rows of the provided types to the provided sink.
+    pub fn new_empty_buffer(sink: CopyInSink<Bytes>, types: &[Type]) -> BinaryCopyInWriter {
+        let mut buf = BytesMut::new();
+        // buf.put_slice(MAGIC);
+        // buf.put_i32(0); // flags
+        // buf.put_i32(0); // header extension
+
+        BinaryCopyInWriter {
+            sink,
+            types: types.to_vec(),
+            buf,
+        }
+    }
+
     /// Writes a single row.
     ///
     /// # Panics
