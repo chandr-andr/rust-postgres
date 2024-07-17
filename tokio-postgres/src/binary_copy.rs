@@ -100,10 +100,7 @@ impl BinaryCopyInWriter {
     }
 
     /// Test
-    pub async fn write_raw_bytes<P>(
-        self: Pin<&mut Self>,
-        values: &mut BytesMut,
-    ) -> Result<(), Error> {
+    pub async fn write_raw_bytes(self: Pin<&mut Self>, values: &mut BytesMut) -> Result<(), Error> {
         let mut this = self.project();
 
         if this.buf.len() > 4096 {
