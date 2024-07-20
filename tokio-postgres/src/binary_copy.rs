@@ -111,6 +111,17 @@ impl BinaryCopyInWriter {
         Ok(())
     }
 
+    /// Write raw bytes to the database without validation.
+    ///
+    /// Must be used only with `new_empty_buffer` method.
+    pub async fn write_raw_bytes(self: Pin<&mut Self>, values: &mut BytesMut) -> Result<(), Error> {
+        let mut this = self.project();
+
+        this.sink.send(values.split().freeze()).await?;
+
+        Ok(())
+    }
+
     /// Completes the copy, returning the number of rows added.
     ///
     /// This method *must* be used to complete the copy process. If it is not, the copy will be aborted.
