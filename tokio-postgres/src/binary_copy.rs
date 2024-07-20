@@ -45,6 +45,18 @@ impl BinaryCopyInWriter {
         }
     }
 
+    /// Creates a new writer with empty buffer
+    /// which will write rows of the provided types to the provided sink.
+    pub fn new_empty_buffer(sink: CopyInSink<Bytes>, types: &[Type]) -> BinaryCopyInWriter {
+        let buf = BytesMut::new();
+
+        BinaryCopyInWriter {
+            sink,
+            types: types.to_vec(),
+            buf,
+        }
+    }
+
     /// Writes a single row.
     ///
     /// # Panics
@@ -107,6 +119,16 @@ impl BinaryCopyInWriter {
 
         this.buf.put_i16(-1);
         this.sink.send(this.buf.split().freeze()).await?;
+        this.sink.finish().await
+    }
+
+    /// Completes the copy, returning the number of rows added.
+    ///
+    /// Must be used only with `new_empty_buffer` method.
+    ///
+    /// This method *must* be used to complete the copy process. If it is not, the copy will be aborted.
+    pub async fn finish_empty(self: Pin<&mut Self>) -> Result<u64, Error> {
+        let this = self.project();
         this.sink.finish().await
     }
 }
