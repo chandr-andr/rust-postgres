@@ -59,7 +59,8 @@ impl Statement {
         }))
     }
 
-    pub(crate) fn name(&self) -> &str {
+    /// Returns information about the name of the statement.
+    pub fn name(&self) -> &str {
         &self.0.name
     }
 
